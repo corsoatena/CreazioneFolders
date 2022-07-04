@@ -16,17 +16,25 @@ namespace CreazioneFolders
                 new Client("Marco", "GENGGRRK8903845ONG"),
                 new Client("Elena", "DPFPEN3935994NINID")
             };
+            foreach (Client client in ING_CLIENT_LIST)
+            {
+                ING.AddCliente(client);
+            }
+            ING.WriteClientsToLog();
+            var ALEX = new Client("Alex", "ALXGGNFNG87GNNG8Y");
+            ING.AddCliente(ALEX);
+            ING.WriteClientsToLog();
 
-            foreach (var cliente in ING_CLIENT_LIST)
-            {
-                ING.AddConto(cliente);
-               
-            }
-            foreach (var cliente in ING_CLIENT_LIST)
-            {
-                
-                ING.Withdraw(cliente._conti.FirstOrDefault() ,1000M,OPERATION_FOLDER.FIAT); // 
-            }
+            //foreach (var cliente in ING_CLIENT_LIST)
+            //{
+            //    ING.AddConto(cliente);
+
+            //}
+            //foreach (var cliente in ING_CLIENT_LIST)
+            //{
+
+            //    ING.Withdraw(cliente._conto ,1000M,OPERATION_FOLDER.FIAT); // 
+            //}
 
         }
     } 
@@ -38,20 +46,34 @@ namespace CreazioneFolders
         public List<Client> Clienti { get; set; }
 
         static string _path = @"C:\";
-       
+        static string _logFolder = @"logs";
+
 
         public Banca(string Name)
         {
             _name = Name;
             Conti = new List<Conto>();
             Clienti = new List<Client>();
+
+            ///CREAZION FOLDER PER LA BANCA
             string s = Path.Combine(_path, _name);
             _path = s;
             if (!Directory.Exists(_path))
             {
                 Directory.CreateDirectory(_path);
             }
-        }         
+
+            /// creare anche la FOLDER per i LOGS
+        }
+        public void AddCliente(Client client)
+        {
+            Clienti.Add(client);
+        }
+        public void WriteClientsToLog()
+        {
+           string path =  Path.Combine(_path, _logFolder); 
+           Writelog(path,Clienti);
+        }
         public void AddConto(Client client)
         {
             long AccountNumber = new Random().Next(10000, 100000);
@@ -79,21 +101,21 @@ namespace CreazioneFolders
             string CryptoFolder = Path.Combine(accountFolder, OPERATION_FOLDER.CRYPTO.ToString());
             Directory.CreateDirectory(CryptoFolder);
         } 
-        public static void Writelog(string path, string msg)
+        public static void Writelog(string path,List<Client> Clienti)
         {
-            File.AppendAllText(path, msg); 
+           /// TODO 
         }
     }
     public class Client
     {
         public string _name { get; set; }    
         public string _cf{ get; set; }
-        public List<Conto> _conti; 
+        public Conto _conto; 
         public Client(string Name, string CF)
         {
             _name = Name;   
             _cf = CF;
-            _conti = new List<Conto>(); 
+            _conto = new Conto(); 
         }
 
     } 
